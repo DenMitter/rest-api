@@ -60,9 +60,20 @@ git clone https://github.com/DenMitter/rest-api.git
 1. Install Dependencies: Run the composer install command to install the necessary packages.
 
 1. Configure Environment: Copy the .env.example file to .env and configure the database access parameters.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-1. Run Migrations: Execute the php artisan migrate command to run migrations and create tables in the database.
+1. Run Migrations and seeders: Execute the php artisan migrate command to run migrations and create tables in the database.
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
 1. Run the Local Server: Run the php artisan serve command to start the local server.
+```bash
+php artisan serve
+```
 
 1. Access the System: Open a web browser and go to http://localhost:8000 to access the blog's homepage.
