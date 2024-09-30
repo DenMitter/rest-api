@@ -70,6 +70,14 @@ password ( min 2, max 999 symbols)
 username ( min 2, max 99 symbols)
 password ( min 2, max 999 symbols)
 ```
+```php
+// Route for delete all tokens (POST)
+/api/invalidate-token
+
+// Arguments
+username ( min 2, max 99 symbols)
+password ( min 2, max 999 symbols)
+```
 
 
 <br>

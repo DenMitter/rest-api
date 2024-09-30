@@ -20,3 +20,4 @@ Route::apiResource('posts', PostController::class);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('create-token', [AuthController::class, 'createToken']);
+Route::post('invalidate-tokens', [AuthController::class, 'invalidateTokens']);

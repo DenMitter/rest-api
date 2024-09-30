@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\CreateTokenRequest;
+use App\Http\Requests\Auth\InvalidateTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -55,6 +56,27 @@ class AuthController extends Controller
             'data' => [
                 'token' => $token
             ]
+        ]);
+    }
+
+    public function invalidateTokens(InvalidateTokenRequest $request)
+    {
+        $credentials = $request->only('username', 'password');
+        
+        $user = User::query()->where('username', $credentials['username'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'messsage' => 'Invalid user data'
+            ], 401);
+        }
+
+        $user->tokens()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All tokens has delete'
         ]);
     }
 }
