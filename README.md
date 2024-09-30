@@ -15,6 +15,8 @@ This project was written for a portfolio on <b>Laravel</b>, the project currentl
     </div>
 </p>
 
+<h1>Posts</h1>
+
 ```php
 // Route for get posts from first page (GET)
 /api/posts
@@ -45,6 +47,20 @@ Value: application/x-www-form-urlencoded
 ```php
 // Route for delete post (DELETE)
 /api/posts/{desired post ID}
+```
+
+<br>
+<br>
+
+<h1>Users</h1>
+
+```php
+// Route for create user (POST)
+/api/register
+
+// Arguments
+username ( min 2, max 99 symbols)
+password ( min 2, max 999 symbols)
 ```
 
 
