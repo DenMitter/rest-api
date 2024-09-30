@@ -4,24 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
-use Illuminate\Http\Request;
-use App\Models\Post;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
+    private PostService $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = Post::query()->orderBy('id', 'desc')->paginate(10);
-        
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'posts' => $posts
-            ]
-        ]);
+        return $this->postService->index();
     }
 
     /**
@@ -29,15 +28,7 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $data = $request->validated();
-        $post = Post::query()->create($data);
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'post' => $post
-            ]
-        ], 200);
+        return $this->postService->store($request);
     }
 
     /**
@@ -45,20 +36,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::query()->where('id', $id)->first();
-
-        if (empty($post)) {
-            return response()->json([
-                'success' => false
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'post' => $post
-            ]
-        ], 200);
+        return $this->postService->show($id);
     }
 
     /**
@@ -66,23 +44,7 @@ class PostController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        $data = $request->validated();
-
-        if (empty($data)) {
-            return response()->json([
-                'success' => false
-            ], 400);
-        }
-
-        $post = Post::query()->where('id', $id)->first();
-        $post->update($data);
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'post' => $post
-            ]
-        ], 200);
+        return $this->postService->update($request, $id);
     }
 
     /**
@@ -90,18 +52,6 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        $post = Post::query()->where('id', $id)->first();
-        
-        if (empty($post)) {
-            return response()->json([
-                'success' => false
-            ], 400);
-        }
-
-        $post->delete();
-
-        return response()->json([
-            'success' => true
-        ], 200);
+        return $this->postService->destroy($id);
     }
 }
