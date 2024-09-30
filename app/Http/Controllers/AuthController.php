@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\CreateTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -29,6 +31,29 @@ class AuthController extends Controller
             'success' => true,
             'data' => [
                 'token' => $token,
+            ]
+        ]);
+    }
+
+    public function createToken(CreateTokenRequest $request) 
+    {
+        $credentials = $request->only('username', 'password');
+
+        $user = User::query()->where('username', $credentials['username'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'messsage' => 'Invalid user data'
+            ], 401);
+        }
+
+        $token = $user->createToken('token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'token' => $token
             ]
         ]);
     }

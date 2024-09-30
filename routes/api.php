@@ -17,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('posts', PostController::class);
+
 Route::post('register', [AuthController::class, 'register']);
+Route::post('create-token', [AuthController::class, 'createToken']);

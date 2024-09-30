@@ -62,6 +62,14 @@ Value: application/x-www-form-urlencoded
 username ( min 2, max 99 symbols)
 password ( min 2, max 999 symbols)
 ```
+```php
+// Route for create token (POST)
+/api/create-token
+
+// Arguments
+username ( min 2, max 99 symbols)
+password ( min 2, max 999 symbols)
+```
 
 
 <br>
