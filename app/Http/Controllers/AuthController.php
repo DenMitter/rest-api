@@ -10,6 +10,26 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request) 
     {
-        // In processing
+        $data = $request->validated();
+
+        // Create User
+        $user = new User();
+
+        $user->username = $data['username'];
+        $user->password = $data['password'];
+
+        $user->save();
+
+        // Generate token
+        $token = $user->createToken('token')->plainTextToken;
+
+        $user->tokens()->delete();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'token' => $token,
+            ]
+        ]);
     }
 }
