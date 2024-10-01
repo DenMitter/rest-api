@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Post;
+use App\Models\Comment;
 
 class PostService {
     public function index() 
@@ -72,7 +73,7 @@ class PostService {
     {
         $post = Post::query()->where('id', $id)->first();
         
-        if (empty($post)) {
+        if (empty($post) || Comment::query()->where('post_id', $id)->first()) {
             return response()->json([
                 'success' => false
             ], 400);
