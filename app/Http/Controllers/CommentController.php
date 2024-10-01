@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Comment\StoreRequest;
 use App\Http\Requests\Comment\UpdateRequest;
 use App\Services\CommentService;
+use App\Models\Comment;
+use Exception;
 
 class CommentController extends Controller
 {
@@ -20,7 +22,14 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return $this->commentService->index();
+        $comments = Comment::query()->orderBy('id', 'desc')->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'comments' => $comments
+            ]
+        ]);
     }
 
     /**
@@ -28,7 +37,19 @@ class CommentController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        return $this->commentService->store($request);
+        try {
+            $data = $this->commentService->store($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], $exception->getCode());
+        }
     }
 
     /**
@@ -36,7 +57,18 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        return $this->commentService->show($id);
+        try {
+            $data = $this->commentService->show($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+            ], $exception->getCode());
+        }
     }
 
     /**
@@ -44,7 +76,18 @@ class CommentController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        return $this->commentService->update($request, $id);
+        try {
+            $data = $this->commentService->update($request->validated(), $id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+            ], $exception->getCode());
+        }
     }
 
     /**
@@ -52,6 +95,16 @@ class CommentController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->commentService->destroy($id);
+        try {
+            $this->commentService->destroy($id);
+
+            return response()->json([
+                'success' => true,
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false
+            ], $exception->getCode());
+        }
     }
 }

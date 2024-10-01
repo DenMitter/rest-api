@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Services\PostService;
+use App\Models\Post;
+use Exception;
 
 class PostController extends Controller
 {
@@ -20,7 +22,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        return $this->postService->index();
+        $posts = Post::query()->orderBy('id', 'desc')->paginate(10);
+        
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'posts' => $posts
+            ]
+        ]);
     }
 
     /**
@@ -28,7 +37,15 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        return $this->postService->store($request);
+        $data = $request->validated();
+        $post = Post::query()->create($data);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'post' => $post
+            ]
+        ], 200);
     }
 
     /**
@@ -36,7 +53,18 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        return $this->postService->show($id);
+        try {
+            $data = $this->postService->show($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false
+            ], $exception->getCode());
+        }
     }
 
     /**
@@ -44,7 +72,18 @@ class PostController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        return $this->postService->update($request, $id);
+        try {
+            $data = $this->postService->update($request->validated(), $id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false
+            ], $exception->getCode());
+        }
     }
 
     /**
@@ -52,6 +91,17 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->postService->destroy($id);
+        try {
+            $data = $this->postService->destroy($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false
+            ], $exception->getCode());
+        }
     }
 }

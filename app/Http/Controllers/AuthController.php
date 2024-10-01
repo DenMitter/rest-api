@@ -24,7 +24,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $data['token']
+                'data' => $data
             ]);
         } catch (Exception $exception) {
             return response()->json([
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $data['token']
+                'data' => $data
             ]);
         } catch (Exception $exception) {
             return response()->json([
@@ -57,7 +57,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => $data['message']
+                'message' => $data
             ]);
         } catch (Exception $exception) {
             return response()->json([
