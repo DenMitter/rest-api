@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateTokenRequest extends FormRequest
 {
@@ -25,5 +27,13 @@ class CreateTokenRequest extends FormRequest
             'username' => 'required|string',
             'password' => 'required|string'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'data' => $validator->errors()
+        ], 400));
     }
 }

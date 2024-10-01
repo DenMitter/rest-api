@@ -79,6 +79,46 @@ username ( min 2, max 99 symbols)
 password ( min 2, max 999 symbols)
 ```
 
+<br>
+<br>
+
+<h1>Comments</h1>
+
+```php
+// Route for get comments from first page (GET)
+/api/comments
+
+// Route for get comments from desired page (GET)
+/api/comments?page={desired number}
+```
+```php
+// Route for create comment (POST)
+/api/comments
+
+// Arguments
+post_id ( min 1, max 11 digits)
+contents ( min 100, max 999 symbols)
+```
+```php
+// Route for show comment (GET)
+/api/comments/{desired comment ID}
+```
+```php
+// Route for update comment (PUT)
+/api/comments/{desired comment ID}
+
+// Arguments
+post_id ( min 1, max 11 digits)
+contents ( min 100, max 999 symbols)
+
+// Headers
+Key: Content-Type
+Value: application/x-www-form-urlencoded
+```
+```php
+// Route for delete comment (DELETE)
+/api/comments/{desired comment ID}
+```
 
 <br>
 

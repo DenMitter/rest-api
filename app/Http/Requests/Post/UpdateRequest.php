@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateRequest extends FormRequest
 {
@@ -25,5 +27,13 @@ class UpdateRequest extends FormRequest
             'title' => 'string|between:10,99',
             'contents' => 'string|between:100,999'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'data' => $validator->errors()
+        ], 400));
     }
 }
