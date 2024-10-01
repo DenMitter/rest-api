@@ -13,4 +13,9 @@ class Post extends Model
         'title',
         'contents'
     ];
+
+    public function comments() 
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

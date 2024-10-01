@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\CreateTokenRequest;
 use App\Http\Requests\Auth\InvalidateTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\AuthService;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -18,16 +19,51 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request) 
     {
-        return $this->authService->register($request);
+        try {
+            $data = $this->authService->register($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'data' => $data['token']
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false
+            ], 400);
+        }
     }
 
     public function createToken(CreateTokenRequest $request) 
     {
-        return $this->authService->createToken($request);
+        try {
+            $data = $this->authService->createToken($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'data' => $data['token']
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], $exception->getCode());
+        }
     }
 
     public function invalidateTokens(InvalidateTokenRequest $request)
     {
-        return $this->authService->invalidateTokens($request);
+        try {
+            $data = $this->authService->invalidateTokens($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'message' => $data['message']
+            ]);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], $exception->getCode());
+        }
     }
 }

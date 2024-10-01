@@ -3,12 +3,11 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Exception;
 
 class AuthService {
-    public function register($request)
+    public function register($data)
     {
-        $data = $request->validated();
-
         // Create User
         $user = new User();
 
@@ -20,57 +19,38 @@ class AuthService {
         // Generate token
         $token = $user->createToken('token')->plainTextToken;
 
-        $user->tokens()->delete();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'token' => $token,
-            ]
-        ]);
+        return [
+            'token' => $token
+        ];
     }
 
-    public function createToken($request)
+    public function createToken($credentials)
     {
-        $credentials = $request->only('username', 'password');
-
         $user = User::query()->where('username', $credentials['username'])->first();
-
+        
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json([
-                'success' => false,
-                'messsage' => 'Invalid user data'
-            ], 401);
+            throw new Exception('Invalid user data', 401);
         }
 
         $token = $user->createToken('token')->plainTextToken;
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'token' => $token
-            ]
-        ]);
+        return [
+            'token' => $token
+        ];
     }
 
-    public function invalidateTokens($request)
-    {
-        $credentials = $request->only('username', 'password');
-        
+    public function invalidateTokens($credentials)
+    {        
         $user = User::query()->where('username', $credentials['username'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json([
-                'success' => false,
-                'messsage' => 'Invalid user data'
-            ], 401);
+            throw new Exception('Invalid user data', 401);
         }
 
         $user->tokens()->delete();
 
-        return response()->json([
-            'success' => true,
+        return [
             'message' => 'All tokens has delete'
-        ]);
+        ];
     }
 }
