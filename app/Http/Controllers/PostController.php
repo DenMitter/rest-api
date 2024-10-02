@@ -7,6 +7,7 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Services\PostService;
 use App\Models\Post;
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
@@ -20,10 +21,10 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $posts = Post::query()->orderBy('id', 'desc')->paginate(10);
-        
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -35,7 +36,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         $post = Post::query()->create($data);
@@ -45,13 +46,13 @@ class PostController extends Controller
             'data' => [
                 'post' => $post
             ]
-        ], 200);
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         try {
             $data = $this->postService->show($id);
@@ -70,7 +71,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, string $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         try {
             $data = $this->postService->update($request->validated(), $id);
@@ -89,7 +90,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         try {
             $data = $this->postService->destroy($id);

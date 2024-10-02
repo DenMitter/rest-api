@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Comment\IndexRequest;
 use App\Http\Requests\Comment\StoreRequest;
 use App\Http\Requests\Comment\UpdateRequest;
 use App\Services\CommentService;
 use App\Models\Comment;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -20,9 +22,17 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
-        $comments = Comment::query()->orderBy('id', 'desc')->paginate(10);
+        $data = $request->validated();
+
+        $comments = Comment::query()->orderBy('id', 'desc');
+
+        if (!empty($data['post_id'])) {
+            $comments = $comments->where('post_id', $data['post_id']);
+        }
+
+        $comments = $comments->paginate(10);
 
         return response()->json([
             'success' => true,

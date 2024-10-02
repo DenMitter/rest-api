@@ -5,7 +5,10 @@ use App\Models\Post;
 use Exception;
 
 class PostService {
-    public function show($id)
+    /**
+     * @throws Exception
+     */
+    public function show($id): array
     {
         $post = Post::query()->where('id', $id)->first();
 
@@ -18,7 +21,7 @@ class PostService {
         ];
     }
 
-    public function update($data, $id)
+    public function update($data, $id): array
     {
         $post = Post::query()->where('id', $id)->first();
         $post->update($data);
@@ -28,7 +31,10 @@ class PostService {
         ];
     }
 
-    public function destroy($id)
+    /**
+     * @throws Exception
+     */
+    public function destroy($id): array
     {
         $post = Post::query()->where('id', $id)->first();
 
