@@ -1,10 +1,12 @@
 <?php
 namespace App\Services;
 
+use App\Contracts\PostServiceContract;
 use App\Models\Post;
 use Exception;
 
-class PostService {
+class PostService implements PostServiceContract
+{
     /**
      * @throws Exception
      */

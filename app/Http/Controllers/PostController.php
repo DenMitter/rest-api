@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\PostServiceContract;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Services\PostService;
@@ -11,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
-    private PostService $postService;
+    private PostServiceContract $postService;
 
     public function __construct(PostService $postService)
     {

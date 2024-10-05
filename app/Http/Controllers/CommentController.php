@@ -26,13 +26,13 @@ class CommentController extends Controller
     {
         $data = $request->validated();
 
-        $comments = Comment::query()->orderBy('id', 'desc');
+        $query = Comment::query()->orderBy('id', 'desc');
 
         if (!empty($data['post_id'])) {
-            $comments = $comments->where('post_id', $data['post_id']);
+            $query->where('post_id', $data['post_id']);
         }
 
-        $comments = $comments->paginate(10);
+        $comments = $query->paginate(10);
 
         return response()->json([
             'success' => true,
